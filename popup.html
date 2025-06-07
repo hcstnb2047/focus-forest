@@ -437,8 +437,248 @@
             }
         }
 
+        @keyframes glow {
+            0% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        @keyframes float-gentle {
+            0% {
+                transform: translateY(-10px) translateX(0px) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(80px) translateX(10px) rotate(180deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(160px) translateX(-5px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 季節エフェクト用のアニメーション */
+        .weather-effect, .seasonal-effect {
+            pointer-events: none;
+        }
+        
+        .fireflies-effect div {
+            animation: glow 2s ease-in-out infinite alternate !important;
+        }
+        
+        .falling-leaves-effect div,
+        .petals-effect div {
+            animation: float-gentle 4s ease-in-out infinite !important;
+        }
+
         .hidden {
             display: none;
+        }
+
+        /* AI インサイト */
+        .ai-insights {
+            margin-bottom: 20px;
+        }
+
+        .insights-card {
+            background: linear-gradient(135deg, var(--surface) 0%, #f3e5f5 100%);
+            padding: 16px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(156, 39, 176, 0.2);
+        }
+
+        .insights-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .insight-score {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .score-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #9c27b0;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .optimal-time {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .recommendations {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* プロジェクト選択 */
+        .project-section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .project-selector {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .project-dropdown {
+            flex: 1;
+            padding: 10px 12px;
+            border: 2px solid var(--forest-green);
+            border-radius: var(--border-radius-small);
+            background: var(--surface);
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+
+        .project-dropdown:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: var(--border-radius-small);
+            background: var(--accent-green);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .btn-icon:hover {
+            background: var(--forest-green);
+            transform: scale(1.05);
+        }
+
+        /* 気分トラッキング */
+        .mood-section {
+            margin-bottom: 20px;
+            background: var(--surface);
+            padding: 16px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .mood-options {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .mood-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: var(--surface-variant);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .mood-btn:hover {
+            transform: scale(1.1);
+            border-color: var(--accent-green);
+        }
+
+        .mood-btn.selected {
+            border-color: var(--accent-green);
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .energy-level {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .energy-level input[type="range"] {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--surface-variant);
+            outline: none;
+        }
+
+        .energy-level input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            cursor: pointer;
+        }
+
+        .energy-level input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            cursor: pointer;
+            border: none;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-height: 700px) {
+            .forest-container {
+                height: 120px;
+            }
+            
+            .session-info {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .ai-insights {
+                margin-bottom: 12px;
+            }
         }
     </style>
 </head>
@@ -490,6 +730,51 @@
             <div class="info-card">
                 <div class="info-value" id="todayTime">0分</div>
                 <div class="info-label">今日の集中時間</div>
+            </div>
+        </div>
+
+        <!-- AI インサイトパネル -->
+        <div class="ai-insights" id="aiInsights" style="display: none;">
+            <div class="insights-card">
+                <div class="insights-title">🧠 AI インサイト</div>
+                <div class="insights-content" id="insightsContent">
+                    <div class="insight-score">
+                        <span class="score-value" id="focusScore">85</span>
+                        <span class="score-label">集中度スコア</span>
+                    </div>
+                    <div class="optimal-time" id="optimalTime">
+                        次の最適時刻: 14:00
+                    </div>
+                    <div class="recommendations" id="recommendations"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- プロジェクト選択 -->
+        <div class="project-section">
+            <div class="section-title">📁 プロジェクト</div>
+            <div class="project-selector">
+                <select id="projectSelect" class="project-dropdown">
+                    <option value="">プロジェクトを選択（任意）</option>
+                </select>
+                <button class="btn-icon" id="addProjectBtn" title="新しいプロジェクトを追加">➕</button>
+            </div>
+        </div>
+
+        <!-- 気分トラッキング -->
+        <div class="mood-section" id="moodSection" style="display: none;">
+            <div class="section-title">😊 今の気分は？</div>
+            <div class="mood-options">
+                <button class="mood-btn" data-mood="excited">😃</button>
+                <button class="mood-btn" data-mood="happy">😊</button>
+                <button class="mood-btn" data-mood="neutral">😐</button>
+                <button class="mood-btn" data-mood="tired">😴</button>
+                <button class="mood-btn" data-mood="stressed">😤</button>
+            </div>
+            <div class="energy-level">
+                <label>エネルギーレベル:</label>
+                <input type="range" id="energySlider" min="1" max="5" value="3">
+                <span id="energyValue">3</span>
             </div>
         </div>
 
