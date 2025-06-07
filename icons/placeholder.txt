@@ -1,0 +1,10 @@
+This directory should contain:
+- forest-icon-16.png
+- forest-icon-48.png  
+- forest-icon-128.png
+
+For now, you can use any tree/forest icons you like.
+Recommended sources:
+- https://www.flaticon.com (search for "forest" or "tree")
+- Create simple icons using CSS/HTML
+- Use emoji as temporary icons

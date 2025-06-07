@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>Focus Forest</title>
+    <style>
+        :root {
+            --forest-green: #1e3a2e;
+            --light-green: #2d5a27;
+            --accent-green: #4caf50;
+            --bright-green: #66bb6a;
+            --brown: #3e2723;
+            --light-brown: #5d4037;
+            --sky-blue: #e3f2fd;
+            --sun-yellow: #ffc107;
+            --text-dark: #1a1a1a;
+            --text-light: #ffffff;
+            --text-muted: #757575;
+            --surface: #ffffff;
+            --surface-variant: #f8f9fa;
+            --primary-gradient: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+            --sky-gradient: linear-gradient(to bottom, #e3f2fd 0%, #c8e6c9 100%);
+            --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.12);
+            --shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.15);
+            --border-radius: 16px;
+            --border-radius-small: 8px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            width: 420px;
+            min-height: 600px;
+            font-family: 'Inter', 'SF Pro Display', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--sky-gradient);
+            overflow-x: hidden;
+            font-size: 14px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .header {
+            text-align: center;
+            padding: 24px 24px 16px;
+            background: var(--primary-gradient);
+            color: var(--text-light);
+            position: relative;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .header .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+
+        .forest-container {
+            height: 180px;
+            background: linear-gradient(to bottom, #e3f2fd 0%, #c8e6c9 40%, #a5d6a7 70%, var(--forest-green) 100%);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 24px;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .sun {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, var(--sun-yellow) 60%, rgba(255, 213, 79, 0.3) 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 213, 79, 0.5);
+        }
+
+        .ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: linear-gradient(to bottom, var(--light-brown) 0%, var(--brown) 100%);
+        }
+
+        .current-tree {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: all 0.3s ease;
+        }
+
+        .tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .tree-trunk {
+            width: 8px;
+            height: 20px;
+            background: var(--brown);
+            border-radius: 4px;
+        }
+
+        .tree-crown {
+            width: 30px;
+            height: 30px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            margin-bottom: 5px;
+            position: relative;
+        }
+
+        .tree-crown::before,
+        .tree-crown::after {
+            content: '';
+            position: absolute;
+            background: var(--accent-green);
+            border-radius: 50%;
+        }
+
+        .tree-crown::before {
+            width: 20px;
+            height: 20px;
+            top: -8px;
+            left: -5px;
+        }
+
+        .tree-crown::after {
+            width: 20px;
+            height: 20px;
+            top: -8px;
+            right: -5px;
+        }
+
+        /* 成長段階 */
+        .stage-seed .tree-crown {
+            width: 8px;
+            height: 8px;
+            background: var(--light-green);
+        }
+
+        .stage-sprout .tree-crown {
+            width: 15px;
+            height: 15px;
+        }
+
+        .stage-sapling .tree-crown {
+            width: 25px;
+            height: 25px;
+        }
+
+        .stage-young_tree .tree-crown {
+            width: 35px;
+            height: 35px;
+        }
+
+        .stage-mature_tree .tree-crown {
+            width: 45px;
+            height: 45px;
+        }
+
+        .stage-ancient_tree .tree-crown {
+            width: 55px;
+            height: 55px;
+            background: var(--forest-green);
+        }
+
+        .content {
+            padding: 0 24px 24px;
+        }
+
+        .timer-display {
+            background: var(--surface);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+        }
+
+        .timer-time {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--forest-green);
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timer-label {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .session-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .info-card {
+            background: var(--surface);
+            padding: 20px 16px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            transition: var(--transition);
+            backdrop-filter: blur(8px);
+        }
+        
+        .info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .info-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--forest-green);
+            margin-bottom: 4px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
+            letter-spacing: 0.2px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: var(--text-light);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-heavy);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--forest-green);
+            border: 2px solid var(--forest-green);
+            backdrop-filter: blur(8px);
+        }
+
+        .btn-secondary:hover {
+            background: var(--forest-green);
+            color: var(--text-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(30, 58, 46, 0.15);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--bright-green) 0%, var(--accent-green) 50%, var(--forest-green) 100%);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 3px;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+        }
+
+        .tree-health {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .health-bar {
+            width: 100px;
+            height: 6px;
+            background: rgba(255, 0, 0, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff4444 0%, #ffff44 50%, #44ff44 100%);
+            transition: width 0.3s ease;
+        }
+
+        .forest-stats {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(8px);
+        }
+
+        .stats-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            text-align: center;
+            letter-spacing: 0.2px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            font-size: 0.85rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: var(--forest-green);
+            font-size: 1.1em;
+            margin-bottom: 2px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .floating-leaves {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .leaf {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--accent-green);
+            border-radius: 0 100% 0 100%;
+            animation: fall 3s linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(160px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>
+            🌳 Focus Forest
+        </h1>
+        <div class="subtitle">集中して森を育てよう</div>
+    </div>
+
+    <div class="forest-container">
+        <div class="sun"></div>
+        <div class="floating-leaves" id="leaves"></div>
+        
+        <div class="current-tree" id="currentTree">
+            <div class="tree" id="tree">
+                <div class="tree-crown"></div>
+                <div class="tree-trunk"></div>
+            </div>
+        </div>
+        
+        <div class="ground"></div>
+    </div>
+
+    <div class="content">
+        <div class="timer-display">
+            <div class="timer-time" id="timerTime">25:00</div>
+            <div class="timer-label" id="timerLabel">作業時間</div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+
+        <div class="tree-health" id="treeHealth" style="display: none;">
+            🌱 木の体力: 
+            <div class="health-bar">
+                <div class="health-fill" id="healthFill" style="width: 100%"></div>
+            </div>
+            <span id="healthText">100%</span>
+        </div>
+
+        <div class="session-info">
+            <div class="info-card">
+                <div class="info-value" id="completedPomodoros">0</div>
+                <div class="info-label">完了したポモドーロ</div>
+            </div>
+            <div class="info-card">
+                <div class="info-value" id="todayTime">0分</div>
+                <div class="info-label">今日の集中時間</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" id="startBtn">🌱 開始</button>
+            <button class="btn btn-secondary" id="stopBtn" disabled>⏹️ 停止</button>
+        </div>
+
+        <div class="forest-stats">
+            <div class="stats-title">🏆 森の統計</div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalTrees">0</div>
+                    <div>育てた木</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="streakDays">0</div>
+                    <div>連続日数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalHours">0</div>
+                    <div>総集中時間</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="efficiency">0%</div>
+                    <div>集中効率</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

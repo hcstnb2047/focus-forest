@@ -1,0 +1,39 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "extensionPath": "/blocked.html"
+      }
+    },
+    "condition": {
+      "urlFilter": "*",
+      "domains": [
+        "youtube.com",
+        "www.youtube.com",
+        "twitter.com",
+        "www.twitter.com",
+        "x.com",
+        "www.x.com",
+        "facebook.com",
+        "www.facebook.com",
+        "instagram.com",
+        "www.instagram.com",
+        "tiktok.com",
+        "www.tiktok.com",
+        "reddit.com",
+        "www.reddit.com",
+        "netflix.com",
+        "www.netflix.com",
+        "twitch.tv",
+        "www.twitch.tv",
+        "discord.com",
+        "www.discord.com",
+        "linkedin.com",
+        "www.linkedin.com"
+      ]
+    }
+  }
+]

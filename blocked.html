@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>Focus Forest - 集中時間中です</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #2d5a27 0%, #4a7c59 50%, #66bb6a 100%);
+            color: white;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 40px;
+            z-index: 10;
+        }
+
+        .forest-scene {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: linear-gradient(to top, #2d5a27 0%, rgba(45, 90, 39, 0.8) 100%);
+            z-index: 1;
+        }
+
+        .tree {
+            position: absolute;
+            bottom: 0;
+        }
+
+        .tree1 {
+            left: 10%;
+            width: 60px;
+            height: 120px;
+            background: 
+                radial-gradient(ellipse 30px 25px at 30px 25px, #4a7c59 40%, transparent 40%),
+                radial-gradient(ellipse 25px 20px at 15px 35px, #66bb6a 40%, transparent 40%),
+                radial-gradient(ellipse 25px 20px at 45px 35px, #4a7c59 40%, transparent 40%),
+                linear-gradient(#5d4037 0%, #5d4037 100%);
+            background-size: 60px 50px, 30px 40px, 30px 40px, 12px 70px;
+            background-position: 0 0, 0 20px, 30px 20px, 24px 50px;
+            background-repeat: no-repeat;
+        }
+
+        .tree2 {
+            left: 25%;
+            width: 80px;
+            height: 140px;
+            background: 
+                radial-gradient(ellipse 40px 30px at 40px 30px, #66bb6a 40%, transparent 40%),
+                radial-gradient(ellipse 30px 25px at 20px 40px, #4a7c59 40%, transparent 40%),
+                radial-gradient(ellipse 30px 25px at 60px 40px, #66bb6a 40%, transparent 40%),
+                linear-gradient(#5d4037 0%, #5d4037 100%);
+            background-size: 80px 60px, 40px 50px, 40px 50px, 15px 80px;
+            background-position: 0 0, 0 25px, 40px 25px, 32px 60px;
+            background-repeat: no-repeat;
+        }
+
+        .tree3 {
+            right: 20%;
+            width: 70px;
+            height: 130px;
+            background: 
+                radial-gradient(ellipse 35px 28px at 35px 28px, #4a7c59 40%, transparent 40%),
+                radial-gradient(ellipse 28px 22px at 18px 38px, #66bb6a 40%, transparent 40%),
+                radial-gradient(ellipse 28px 22px at 52px 38px, #4a7c59 40%, transparent 40%),
+                linear-gradient(#5d4037 0%, #5d4037 100%);
+            background-size: 70px 56px, 35px 44px, 35px 44px, 14px 74px;
+            background-position: 0 0, 0 22px, 35px 22px, 28px 56px;
+            background-repeat: no-repeat;
+        }
+
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+        }
+
+        .particle:nth-child(1) { width: 4px; height: 4px; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 6px; height: 6px; left: 20%; animation-delay: 1s; }
+        .particle:nth-child(3) { width: 3px; height: 3px; left: 30%; animation-delay: 2s; }
+        .particle:nth-child(4) { width: 5px; height: 5px; left: 40%; animation-delay: 3s; }
+        .particle:nth-child(5) { width: 4px; height: 4px; left: 50%; animation-delay: 4s; }
+        .particle:nth-child(6) { width: 7px; height: 7px; left: 60%; animation-delay: 0.5s; }
+        .particle:nth-child(7) { width: 3px; height: 3px; left: 70%; animation-delay: 1.5s; }
+        .particle:nth-child(8) { width: 5px; height: 5px; left: 80%; animation-delay: 2.5s; }
+        .particle:nth-child(9) { width: 6px; height: 6px; left: 90%; animation-delay: 3.5s; }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .icon {
+            font-size: 8rem;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .message {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .timer-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .remaining-time {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .timer-label {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .motivation {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .motivation h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .motivation p {
+            font-size: 1rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-primary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .message {
+                font-size: 1.2rem;
+            }
+
+            .remaining-time {
+                font-size: 2rem;
+            }
+
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="forest-scene">
+        <div class="tree tree1"></div>
+        <div class="tree tree2"></div>
+        <div class="tree tree3"></div>
+    </div>
+
+    <div class="container">
+        <div class="icon">🌳</div>
+        <h1>集中時間中です</h1>
+        <p class="message">
+            今は集中する時間です。<br>
+            あなたの木が静かに成長しています。
+        </p>
+
+        <div class="timer-info">
+            <div class="remaining-time" id="remainingTime">00:00</div>
+            <div class="timer-label">残り時間</div>
+        </div>
+
+        <div class="motivation">
+            <h3>🌱 今日の集中メッセージ</h3>
+            <p id="motivationText">継続は力なり。小さな一歩が大きな成果につながります。</p>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" onclick="openExtension()">
+                🌳 Forest を開く
+            </button>
+            <button class="btn btn-secondary" onclick="emergency()">
+                🚨 緊急時のみ
+            </button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="todayTrees">0</div>
+                <div class="stat-label">今日育てた木</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalTime">0分</div>
+                <div class="stat-label">今日の集中時間</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="currentStreak">0日</div>
+                <div class="stat-label">連続記録</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // モチベーションメッセージ
+        const motivationMessages = [
+            "継続は力なり。小さな一歩が大きな成果につながります。",
+            "集中力は筋肉のようなもの。鍛えれば鍛えるほど強くなります。",
+            "今この瞬間の集中が、未来のあなたを作ります。",
+            "深い森のように、静寂の中で最も美しいものが育ちます。",
+            "一つのことに集中することで、無限の可能性が開かれます。",
+            "集中とは、今この瞬間を大切にすることです。",
+            "木は一日で育たない。偉大なことも一日では成し遂げられません。",
+            "静寂は心の庭園。そこで最も美しい花が咲きます。"
+        ];
+
+        // 拡張機能を開く
+        function openExtension() {
+            chrome.runtime.sendMessage({ action: 'openPopup' });
+        }
+
+        // 緊急時の処理
+        function emergency() {
+            if (confirm('本当に集中時間を中断しますか？\n木が枯れてしまう可能性があります。')) {
+                chrome.runtime.sendMessage({ action: 'emergencyStop' });
+                window.history.back();
+            }
+        }
+
+        // タイマー更新
+        function updateTimer() {
+            chrome.runtime.sendMessage({ action: 'getState' }, (response) => {
+                if (response && response.currentSession && response.currentSession.isActive) {
+                    const { currentSession, forestState } = response;
+                    const elapsed = Math.floor((Date.now() - currentSession.startTime) / 1000);
+                    const remaining = Math.max(0, currentSession.duration - elapsed);
+                    
+                    const minutes = Math.floor(remaining / 60);
+                    const seconds = remaining % 60;
+                    
+                    document.getElementById('remainingTime').textContent = 
+                        `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    
+                    // 統計更新
+                    document.getElementById('todayTrees').textContent = 
+                        forestState.trees.filter(tree => {
+                            const treeDate = new Date(tree.completedAt).toDateString();
+                            const today = new Date().toDateString();
+                            return treeDate === today;
+                        }).length;
+                    
+                    document.getElementById('totalTime').textContent = 
+                        Math.floor(forestState.todayFocusTime / 60) + '分';
+                    
+                    document.getElementById('currentStreak').textContent = 
+                        forestState.streakDays + '日';
+                }
+            });
+        }
+
+        // ランダムメッセージ表示
+        function showRandomMotivation() {
+            const randomMessage = motivationMessages[Math.floor(Math.random() * motivationMessages.length)];
+            document.getElementById('motivationText').textContent = randomMessage;
+        }
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', () => {
+            showRandomMotivation();
+            updateTimer();
+            setInterval(updateTimer, 1000);
+            setInterval(showRandomMotivation, 30000); // 30秒ごとにメッセージ変更
+        });
+
+        // キーボードショートカット
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                openExtension();
+            }
+        });
+    </script>
+</body>
+</html>

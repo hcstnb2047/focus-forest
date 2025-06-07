@@ -1,0 +1,55 @@
+{
+  "manifest_version": 3,
+  "name": "Focus Forest - ポモドーロ森育成",
+  "version": "1.0.0",
+  "description": "集中作業でバーチャルな森を育てよう！ポモドーロテクニック + 森育成ゲーム",
+  
+  "permissions": [
+    "storage",
+    "tabs",
+    "declarativeNetRequest",
+    "activeTab",
+    "alarms"
+  ],
+  
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  
+  "background": {
+    "service_worker": "background.js"
+  },
+  
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Focus Forest",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "distraction_blocker",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  
+  "web_accessible_resources": [
+    {
+      "resources": ["blocked.html", "sounds/*", "images/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
